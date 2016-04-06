@@ -13,6 +13,8 @@ var apiKeys = require("./keys.js");
 
 var twitterKeys = apiKeys.twitterKeys;
 
+var Spotify = require('spotify');
+
 // Takes in all of the command line arguments
 var inputString = process.argv;
 
@@ -47,8 +49,8 @@ function myTweets() {
 					var tweetDate = new Date(timeline[tweet].created_at);
 
 					// log out the date and text of our latest tweets.
-					consoleFileLog("Tweet #" + (parseInt(tweet) + 1) + " // Date: " + tweetDate.toString().slice(0, 24)); 
-					consoleFileLog(timeline[tweet].text);
+					console.log("Tweet #" + (parseInt(tweet) + 1) + " // Date: " + tweetDate.toString().slice(0, 24)); 
+					console.log(timeline[tweet].text);
 				}
 				else {
 					return true;
@@ -56,7 +58,7 @@ function myTweets() {
 			}
 		}
 		else {
-			consoleFileLog(error);
+			console.log(error);
 		}
 	});
 }
@@ -87,8 +89,3 @@ function mySpotify(argumentOne){
 		}
 	});
 };
-
-// this function logs to the console
-function consoleFileLog(str) {
-	console.log(str);
-}
