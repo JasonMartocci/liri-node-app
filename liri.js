@@ -1,17 +1,18 @@
-/* Load the HTTP library */
-var http = require("http");
+// /* Load the HTTP library */
+// var http = require("http");
 
-/* Create an HTTP server to handle responses */
-http.createServer(function(request, response) {
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.write("Hello World");
-  response.end();
-}).listen(8888);
+// /* Create an HTTP server to handle responses */
+// http.createServer(function(request, response) {
+//   response.writeHead(200, {"Content-Type": "text/plain"});
+//   response.write("Hello World");
+//   response.end();
+// }).listen(8888);
 
-// Makes connection to the keys file
-var apiKeys = require("./keys.js");
+// // Makes connection to the keys file
+// var apiKeys = require("./keys.js");
 
-var twitterKeys = apiKeys.twitterKeys;
+// var twitterKeys = apiKeys.twitterKeys;
+
 var fs = require('fs');
 var Spotify = require('spotify');
 var request = require('request');
@@ -119,6 +120,13 @@ function doWhatItSays(){
 	   if (err) {
 	       return console.error(err);
 	   }
+	   var array = data.split(',');
+	   var fileAction = array[0];
+       var fileData = array[1];
+       console.log(fileAction);
+       console.log(fileData);
+        // run the main function again with the data from the file.
+        // mySpotify(fileAction,fileData);
 	   console.log("Asynchronous read: " + data.toString());
 	});
 
