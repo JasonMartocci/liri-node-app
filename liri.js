@@ -14,6 +14,7 @@ var apiKeys = require("./keys.js");
 var twitterKeys = apiKeys.twitterKeys;
 
 var Spotify = require('spotify');
+var request = require('request');
 
 // Takes in all of the command line arguments
 var inputString = process.argv;
@@ -21,7 +22,6 @@ var inputString = process.argv;
 // Parses the command line argument to capture the data
 var selections = inputString[2];
 var argumentOne = process.argv[3];
-var argumentTwo = process.argv[4];
 
 // Based on the selections we run the appropriate if statement
 if (selections == "my-tweets"){
@@ -29,7 +29,7 @@ if (selections == "my-tweets"){
 } else if (selections == "spotify-this-song"){
 	mySpotify(argumentOne);
 } else if (selections == "movie-this"){
-	console.log("OMDB");
+	omdb(argumentOne);
 } else if (selections == "do-what-it-says"){
 	console.log("Do what it says.");
 }
@@ -66,26 +66,48 @@ function myTweets() {
 // Spotify function
 function mySpotify(argumentOne){
 	if(argumentOne === undefined){
-	 	console.log("What's my age again");
+	 	argumentOne = "What's my age again";
 	 }
 
 	// send out the call to the Spotify API
-	Spotify.search({ type: 'track', query: argumentOne }, function(err, data) {
-	    if ( err ) {
-	        console.log('Error occurred: ' + err);
-	        return;
-	    }
-	    
-	    var items = data.tracks.items;
+	Spotify.search({ type: 'track', query: argumentOne }, function(error, data) {
+	    if (!error) {	    
+		    var items = data.tracks.items;
 
-	    for (i=0; i<items.length; i++){
-		 		for (j=0; j<items[i].artists.length; j++){
-		    		console.log("Artist: "+items[i].artists[j].name);
-		    	}
-	    	console.log("Song Name: "+items[i].name);
-	    	console.log("Preview Link of the song from Spotify: "+items[i].preview_url);
-	    	console.log("Album Name: "+items[i].album.name);
-			console.log("\n");
+		    for (i=0; i<items.length; i++){
+			 		for (j=0; j<items[i].artists.length; j++){
+			    		console.log("Artist: "+items[i].artists[j].name);
+			    	}
+		    	console.log("Song Name: "+items[i].name);
+		    	console.log("Preview Link of the song from Spotify: "+items[i].preview_url);
+		    	console.log("Album Name: "+items[i].album.name);
+				console.log("\n");
+			}
 		}
 	});
 };
+
+// OMDB function
+function omdb(argumentOne){
+	 if(argumentOne === undefined){
+	 	argumentOne = 'Mr. Nobody';
+	 }
+
+	// send out the call to the OMDB API
+	 request('http://www.omdbapi.com/?t='+argumentOne+'&y=&plot=short&tomatoes=true&r=json', function(error, response, body) {
+		if (!error) {
+		   var json = JSON.parse(body);
+
+		   console.log("Title: "+json.title);
+		   console.log("Year: "+json.Year);
+		   console.log("IMDB Rating: "+json.imdbRating);
+		   console.log("Country: "+json.Country);
+		   console.log("Language: "+json.Language);
+		   console.log("Plot: "+json.Plot);
+		   console.log("Actors: "+json.Actors);
+		   console.log("Rotten Tomatoes rating: "+json.tomatoRating);
+		   console.log("Rotten Tomatoes URL: "+json.tomatoURL);
+		   console.log("\n");
+		}
+	})
+}
