@@ -12,7 +12,6 @@ http.createServer(function(request, response) {
 var apiKeys = require("./keys.js");
 
 var twitterKeys = apiKeys.twitterKeys;
-
 var fs = require('fs');
 var Spotify = require('spotify');
 var request = require('request');
