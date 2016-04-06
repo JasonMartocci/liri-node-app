@@ -13,6 +13,7 @@ var apiKeys = require("./keys.js");
 
 var twitterKeys = apiKeys.twitterKeys;
 
+var fs = require('fs');
 var Spotify = require('spotify');
 var request = require('request');
 
@@ -31,7 +32,7 @@ if (selections == "my-tweets"){
 } else if (selections == "movie-this"){
 	omdb(argumentOne);
 } else if (selections == "do-what-it-says"){
-	console.log("Do what it says.");
+	doWhatItSays();
 }
 
 
@@ -110,4 +111,9 @@ function omdb(argumentOne){
 		   console.log("\n");
 		}
 	})
+}
+
+// Do what it says function
+function doWhatItSays(){
+	console.log("Do what it says.");
 }
