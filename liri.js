@@ -114,8 +114,6 @@ function omdb(argumentOne){
 
 // Do what it says function
 function doWhatItSays(){
-	var fs = require("fs");
-
 	// Asynchronous read
 	fs.readFile('random.txt', function (err, data) {
 	   if (err) {
