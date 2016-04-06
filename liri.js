@@ -114,5 +114,21 @@ function omdb(argumentOne){
 
 // Do what it says function
 function doWhatItSays(){
-	console.log("Do what it says.");
+	var fs = require("fs");
+
+	// Asynchronous read
+	fs.readFile('random.txt', function (err, data) {
+	   if (err) {
+	       return console.error(err);
+	   }
+	   console.log("Asynchronous read: " + data.toString());
+	});
+
+	// Synchronous read
+	var data = fs.readFileSync('random.txt');
+	console.log("Synchronous read: " + data.toString());
+
+	console.log("Program Ended");
 }
+
+// http://www.tutorialspoint.com/nodejs/nodejs_file_system.htm
