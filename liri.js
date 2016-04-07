@@ -115,26 +115,23 @@ function omdb(argumentOne){
 
 // Do what it says function
 function doWhatItSays(){
-	// Asynchronous read
-	fs.readFile('random.txt', function (err, data) {
-	   if (err) {
-	       return console.error(err);
-	   }
-	   var array = data.split(',');
-	   var fileAction = array[0];
-       var fileData = array[1];
-       console.log(fileAction);
-       console.log(fileData);
-        // run the main function again with the data from the file.
-        // mySpotify(fileAction,fileData);
-	   console.log("Asynchronous read: " + data.toString());
+	fs.readFile("random.txt", 'utf8', function(err, data){
+		if (err) throw err;
+
+		var things = data.split(',');
+
+		// for (var i = 0; i < things.length; i++) {
+		// 	console.log(things[i]);
+		// }
+
+		var partOne = things[0];
+		var partTwo = things[1];
+
+		mySpotify(partOne,partTwo)
+
+		// console.log(partOne);
+		// console.log(partTwo);	
 	});
-
-	// Synchronous read
-	var data = fs.readFileSync('random.txt');
-	console.log("Synchronous read: " + data.toString());
-
-	console.log("Program Ended");
 }
 
 // http://www.tutorialspoint.com/nodejs/nodejs_file_system.htm
