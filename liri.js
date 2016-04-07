@@ -1,21 +1,12 @@
-// /* Load the HTTP library */
-// var http = require("http");
-
-// /* Create an HTTP server to handle responses */
-// http.createServer(function(request, response) {
-//   response.writeHead(200, {"Content-Type": "text/plain"});
-//   response.write("Hello World");
-//   response.end();
-// }).listen(8888);
-
 // // Makes connection to the keys file
-// var apiKeys = require("./keys.js");
+var apiKeys = require("./keys.js");
 
-// var twitterKeys = apiKeys.twitterKeys;
+var twitterKeys = apiKeys.twitterKeys;
 
 var fs = require('fs');
 var Spotify = require('spotify');
 var request = require('request');
+var colors = require('colors');
 
 // Takes in all of the command line arguments
 var inputString = process.argv;
@@ -39,19 +30,23 @@ if (selections == "my-tweets"){
 // Twitter function 
 function myTweets() {
 	var client = twitterKeys;
-	var params = {screen_name: 'jasonmartocci'};
+	var params = {screen_name: 'scentfinder'};
 
 	// send out the call to the Twitter API
 	client.get('statuses/user_timeline', params, function(error, timeline, response) {	
 		if (!error) {
 			for (tweet in timeline) {
-				if (tweet < 9) { 
+				if (tweet < 10) { 
 					// get the date of the tweet
 					var tweetDate = new Date(timeline[tweet].created_at);
 
 					// log out the date and text of our latest tweets.
-					console.log("Tweet #" + (parseInt(tweet) + 1) + " // Date: " + tweetDate.toString().slice(0, 24)); 
+					console.log("Tweet #".green + (parseInt(tweet) + 1) + " Date: ".green + tweetDate.toString().slice(0, 24)); 
 					console.log(timeline[tweet].text);
+		   			console.log("\n");
+
+					fs.appendFile('log.txt', " Tweet #" + (parseInt(tweet) + 1) + " Date: " + tweetDate.toString().slice(0, 24)); 
+					fs.appendFile('log.txt', timeline[tweet].text);
 				}
 				else {
 					return true;
@@ -77,12 +72,19 @@ function mySpotify(argumentOne){
 
 		    for (i=0; i<items.length; i++){
 			 		for (j=0; j<items[i].artists.length; j++){
-			    		console.log("Artist: "+items[i].artists[j].name);
+			    		console.log("Artist: ".green + items[i].artists[j].name);
 			    	}
-		    	console.log("Song Name: "+items[i].name);
-		    	console.log("Preview Link of the song from Spotify: "+items[i].preview_url);
-		    	console.log("Album Name: "+items[i].album.name);
+		    	console.log("Song Name: ".green + items[i].name);
+		    	console.log("Preview Link of the song from Spotify: ".green + items[i].preview_url);
+		    	console.log("Album Name: ".green + items[i].album.name);
 				console.log("\n");
+
+			 		for (k=0; k<items[i].artists.length; k++){
+			    		fs.appendFile('log.txt', " Artist: " + items[i].artists[k].name);
+			    	}
+    			fs.appendFile('log.txt', ", Song Name: " + items[i].name);
+		    	fs.appendFile('log.txt', ", Preview Link of the song from Spotify: "+items[i].preview_url);
+		    	fs.appendFile('log.txt', ", Album Name: "+items[i].album.name);
 			}
 		}
 	});
@@ -99,16 +101,26 @@ function omdb(argumentOne){
 		if (!error) {
 		   var json = JSON.parse(body);
 
-		   console.log("Title: "+json.title);
-		   console.log("Year: "+json.Year);
-		   console.log("IMDB Rating: "+json.imdbRating);
-		   console.log("Country: "+json.Country);
-		   console.log("Language: "+json.Language);
-		   console.log("Plot: "+json.Plot);
-		   console.log("Actors: "+json.Actors);
-		   console.log("Rotten Tomatoes rating: "+json.tomatoRating);
-		   console.log("Rotten Tomatoes URL: "+json.tomatoURL);
+		   console.log("Title: ".green + json.Title);
+		   console.log("Year: ".green + json.Year);
+		   console.log("IMDB Rating: ".green + json.imdbRating);
+		   console.log("Country: ".green + json.Country);
+		   console.log("Language: ".green + json.Language);
+		   console.log("Plot: ".green + json.Plot);
+		   console.log("Actors: ".green + json.Actors);
+		   console.log("Rotten Tomatoes rating: ".green + json.tomatoRating);
+		   console.log("Rotten Tomatoes URL: ".green + json.tomatoURL);
 		   console.log("\n");
+
+		   fs.appendFile('log.txt', "Title: " + json.Title + "\n");
+		   fs.appendFile('log.txt', "Year: " + json.Year + "\n");
+		   fs.appendFile('log.txt', "IMDB Rating: " + json.imdbRating + "\n");
+		   fs.appendFile('log.txt', "Country: " + json.Country + "\n");
+		   fs.appendFile('log.txt', "Language: " + json.Language + "\n");
+		   fs.appendFile('log.txt', "Plot: " + json.Plot + "\n");
+		   fs.appendFile('log.txt', "Actors: " + json.Actors + "\n");
+		   fs.appendFile('log.txt', "Rotten Tomatoes rating: " + json.tomatoRating + "\n");
+		   fs.appendFile('log.txt', "Rotten Tomatoes URL: " + json.tomatoURL + "\n");
 		}
 	})
 }
@@ -119,19 +131,8 @@ function doWhatItSays(){
 		if (err) throw err;
 
 		var things = data.split(',');
-
-		// for (var i = 0; i < things.length; i++) {
-		// 	console.log(things[i]);
-		// }
-
-		var partOne = things[0];
 		var partTwo = things[1];
 
-		mySpotify(partOne,partTwo)
-
-		// console.log(partOne);
-		// console.log(partTwo);	
+		mySpotify(partTwo);	
 	});
 }
-
-// http://www.tutorialspoint.com/nodejs/nodejs_file_system.htm
